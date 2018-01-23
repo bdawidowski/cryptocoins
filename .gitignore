@@ -1,3 +1,4 @@
+*.gem
 /.bundle/
 /.yardoc
 /_yardoc/
@@ -7,4 +8,4 @@
 /spec/reports/
 /tmp/
 /.idea/*
-*.gem
+

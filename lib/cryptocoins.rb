@@ -66,15 +66,15 @@ module CryptoCoins
             item_json = {
                 'rank' => tds[0].text,
                 'name' => tds[1].text,
-                'icon' => tds[1].xpath('./img/@src').value,
-                'link' => tds[2].xpath('./a/@href').value,
+                'icon' => tds[1].xpath('./img/@src'),
+                'link' => tds[2].xpath('./a/@href'),
                 'pair' => tds[2].text,
-                '24h_volume_usd' => tds[3].xpath('./span/@data-usd').value,
-                '24h_volume_btc' => tds[3].xpath('./span/@data-btc').value,
-                '24h_volume_native' => tds[3].xpath('./span/@data-native').value,
-                'price_usd' => tds[4].xpath('./span/@data-usd').value,
-                'price_btc' => tds[4].xpath('./span/@data-btc').value,
-                'price_native' => tds[4].xpath('./span/@data-native').value,
+                '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
+                '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
+                '24h_volume_native' => tds[3].xpath('./span/@data-native'),
+                'price_usd' => tds[4].xpath('./span/@data-usd'),
+                'price_btc' => tds[4].xpath('./span/@data-btc'),
+                'price_native' => tds[4].xpath('./span/@data-native'),
                 'percent_volume' => tds[5].text.gsub('[\s\r\n%]+', '')
             }
           end
