@@ -34,10 +34,10 @@ module CryptoCoins
               '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
               '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
               '24h_volume_native' => tds[3].xpath('./span/@data-native'),
-              'price_usd' => tds[3].xpath('./span/@data-usd'),
-              'price_btc' => tds[3].xpath('./span/@data-btc'),
-              'price_native' => tds[3].xpath('./span/@data-native'),
-              'percent_volume' => tds[4].xpath('./span/@data-format-value')
+              'price_usd' => tds[4].xpath('./span/@data-usd'),
+              'price_btc' => tds[4].xpath('./span/@data-btc'),
+              'price_native' => tds[4].xpath('./span/@data-native'),
+              'percent_volume' => tds[5].xpath('./span/@data-format-value')
           }
           markets_json[ticker.downcase] << item_json
         end
@@ -66,16 +66,16 @@ module CryptoCoins
             item_json = {
                 'rank' => tds[0].text,
                 'name' => tds[1].text,
-                'icon' => tds[1].xpath('./img/@src'),
-                'link' => tds[2].xpath('./a/@href'),
+                'icon' => tds[1].xpath('./img/@src').value,
+                'link' => tds[2].xpath('./a/@href').value,
                 'pair' => tds[2].text,
-                '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
-                '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
-                '24h_volume_native' => tds[3].xpath('./span/@data-native'),
-                'price_usd' => tds[3].xpath('./span/@data-usd'),
-                'price_btc' => tds[3].xpath('./span/@data-btc'),
-                'price_native' => tds[3].xpath('./span/@data-native'),
-                'percent_volume' => tds[4].text.gsub('%', '')
+                '24h_volume_usd' => tds[3].xpath('./span/@data-usd').value,
+                '24h_volume_btc' => tds[3].xpath('./span/@data-btc').value,
+                '24h_volume_native' => tds[3].xpath('./span/@data-native').value,
+                'price_usd' => tds[4].xpath('./span/@data-usd').value,
+                'price_btc' => tds[4].xpath('./span/@data-btc').value,
+                'price_native' => tds[4].xpath('./span/@data-native').value,
+                'percent_volume' => tds[5].text.gsub('[\s\r\n%]+', '')
             }
           end
           coins_json[market.downcase] << item_json
