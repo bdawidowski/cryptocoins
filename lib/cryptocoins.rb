@@ -1,11 +1,9 @@
-require "cryptocoins/version"
+require 'cryptocoins/version'
 require 'httparty'
 require 'open-uri'
-require 'phantomjs'
+require 'nokogiri'
+
 module CryptoCoins
-  def.initialize
-    Phantomjs.path
-  end
   class Coin
     def self.top(limit)
       options = {query: { limit: limit.to_s}}
@@ -20,25 +18,76 @@ module CryptoCoins
       end
     end
     def self.markets(ticker)
-      markets_json = []
-      markets_table = Nokogiri::HTML(open("https://coinmarketcap.com/currencies/#{self.find(ticker)['id']}/")).at_css("table[@id = 'markets-table']").at_css('tbody')
-      markets_table.search('tr').each do |row|
-        tds = row.search('td')
-        item_json = {
-            'rank' => tds[0].text,
-            'name' => tds[1].text,
-            'pair' => tds[2].text,
-            '24h_volume' => tds[3].text,
-            'price' => tds[3].text,
-            'percent_volume' => tds[4].text
-        }
-        markets_json << item_json
+      markets_json = {
+          ticker.downcase => []
+      }
+      begin
+        markets_table = Nokogiri::HTML(open("https://coinmarketcap.com/currencies/#{self.find(ticker)['id']}/"))
+        markets_table = markets_table.xpath("//table[@id = 'markets-table']/tbody")
+        markets_table.search('tr').each do |row|
+          tds = row.search('td')
+          item_json = {
+              'rank' => tds[0].text,
+              'name' => tds[1].text,
+              'pair' => tds[2].text,
+              'link' => tds[2].xpath('./a/@href'),
+              '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
+              '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
+              '24h_volume_native' => tds[3].xpath('./span/@data-native'),
+              'price_usd' => tds[3].xpath('./span/@data-usd'),
+              'price_btc' => tds[3].xpath('./span/@data-btc'),
+              'price_native' => tds[3].xpath('./span/@data-native'),
+              'percent_volume' => tds[4].xpath('./span/@data-format-value')
+          }
+          markets_json[ticker.downcase] << item_json
+        end
         return markets_json.to_json
+      rescue
+        error = {
+            'error' => "Invaild HTTP Request! **#{ticker.upcase}** Coin Not Supported!"
+        }
+        markets_table[ticker.downcase] = []
+        markets_table[ticker.downcase] << error
       end
     end
   end
   class Markets
-    def self.na
+    def self.coins(market)
+      coins_json = {
+          market.downcase => []
+      }
+      begin
+        coins_table = Nokogiri::HTML(open("https://coinmarketcap.com/exchanges/#{market.downcase}/"))
+        coins_table = coins_table.xpath('//table/tbody')
+        coins_table.search('tr').each_with_index do |row, i|
+          if i > 0
+            tds = row.search('td')
+            item_json = {
+                'rank' => tds[0].text,
+                'name' => tds[1].text,
+                'icon' => tds[1].xpath('./img/@src'),
+                'link' => tds[2].xpath('./a/@href'),
+                'pair' => tds[2].text,
+                '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
+                '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
+                '24h_volume_native' => tds[3].xpath('./span/@data-native'),
+                'price_usd' => tds[3].xpath('./span/@data-usd'),
+                'price_btc' => tds[3].xpath('./span/@data-btc'),
+                'price_native' => tds[3].xpath('./span/@data-native'),
+                'percent_volume' => tds[4].text.gsub('%', '')
+            }
+          end
+          coins_json[market.downcase] << item_json
+        end
+        return coins_table.to_json
+      rescue
+        error = {
+            'error' => "Invaild HTTP Request! **#{market.upcase}** Exchange Not Supported!"
+        }
+        coins_table[market.downcase] = []
+        coins_table[market.downcase] << error
+        return coins_table.to_json
+      end
     end
   end
   class News
@@ -53,6 +102,9 @@ module CryptoCoins
                          q: keywords,
                          pageSize: '100'}}
       return HTTParty.get('https://newsapi.org/v2/everything?', options)['articles']
+    end
+    def self.bitcoin(secret_key)
+      return self.search('+bitcoin', secret_key)
     end
   end
 end
