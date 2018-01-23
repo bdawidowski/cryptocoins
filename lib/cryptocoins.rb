@@ -41,13 +41,14 @@ module CryptoCoins
           }
           markets_json[ticker.downcase] << item_json
         end
-        return markets_json.to_json
+        return markets_json
       rescue
         error = {
             'error' => "Invaild HTTP Request! **#{ticker.upcase}** Coin Not Supported!"
         }
-        markets_table[ticker.downcase] = []
-        markets_table[ticker.downcase] << error
+        markets_json[ticker.downcase] = []
+        markets_json[ticker.downcase] << error
+        return markets_json
       end
     end
   end
@@ -58,7 +59,7 @@ module CryptoCoins
       }
       begin
         coins_table = Nokogiri::HTML(open("https://coinmarketcap.com/exchanges/#{market.downcase}/"))
-        coins_table = coins_table.xpath('//table/tbody')
+        coins_table = coins_table.xpath("//div[@class = 'table-responsive']/table")
         coins_table.search('tr').each_with_index do |row, i|
           if i > 0
             tds = row.search('td')
@@ -79,14 +80,14 @@ module CryptoCoins
           end
           coins_json[market.downcase] << item_json
         end
-        return coins_table.to_json
+        return coins_json
       rescue
         error = {
             'error' => "Invaild HTTP Request! **#{market.upcase}** Exchange Not Supported!"
         }
-        coins_table[market.downcase] = []
-        coins_table[market.downcase] << error
-        return coins_table.to_json
+        coins_json[market.downcase] = []
+        coins_json[market.downcase] << error
+        return coins_json
       end
     end
   end

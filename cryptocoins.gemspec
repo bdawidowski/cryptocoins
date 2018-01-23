@@ -8,11 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = CryptoCoins::VERSION
   spec.authors       = ["teamdawi"]
   spec.email         = ["brett@teamdawi.com"]
-
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
-
+  spec.licenses      = ['MIT']
+  spec.summary       = %q{Crytocurrency Api using CoinMarketCaps Data and gathers News from sources}
+  spec.description   = %q{Data and News Api for CryptoCurrencies}
+  spec.homepage      = "https://github.com/bdawidowski/cryptocoins"
+  spec.metadata    = { "source_code_uri" => "https://github.com/bdawidowski/cryptocoins" }
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   # if spec.respond_to?(:metadata)
@@ -31,6 +31,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "httparty"
-  spec.add_development_dependency "nokogiri"
+  spec.add_development_dependency "httparty", "~> 0.13.7"
+  spec.add_development_dependency "nokogiri", "~> 1.8"
 end

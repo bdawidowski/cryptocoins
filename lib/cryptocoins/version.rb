@@ -1,3 +1,3 @@
-module Cryptocoins
-  VERSION = "0.1.0"
+module CryptoCoins
+  VERSION = "0.1.1-beta"
 end
