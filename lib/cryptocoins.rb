@@ -30,14 +30,14 @@ module CryptoCoins
               'rank' => tds[0].text,
               'name' => tds[1].text,
               'pair' => tds[2].text,
-              'link' => tds[2].xpath('./a/@href'),
-              '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
-              '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
-              '24h_volume_native' => tds[3].xpath('./span/@data-native'),
-              'price_usd' => tds[4].xpath('./span/@data-usd'),
-              'price_btc' => tds[4].xpath('./span/@data-btc'),
-              'price_native' => tds[4].xpath('./span/@data-native'),
-              'percent_volume' => tds[5].xpath('./span/@data-format-value')
+              'link' => tds[2].xpath('./a/@href').first.value,
+              '24h_volume_usd' => tds[3].xpath('./span/@data-usd').first.value,
+              '24h_volume_btc' => tds[3].xpath('./span/@data-btc').first.value,
+              '24h_volume_native' => tds[3].xpath('./span/@data-native').first.value,
+              'price_usd' => tds[4].xpath('./span/@data-usd').first.value,
+              'price_btc' => tds[4].xpath('./span/@data-btc').first.value,
+              'price_native' => tds[4].xpath('./span/@data-native').first.value,
+              'percent_volume' => tds[5].xpath('./span/@data-format-value').first.value
           }
           markets_json[ticker.downcase] << item_json
         end
@@ -52,7 +52,7 @@ module CryptoCoins
       end
     end
   end
-  class Markets
+  class Market
     def self.coins(market)
       coins_json = {
           market.downcase => []
@@ -66,15 +66,15 @@ module CryptoCoins
             item_json = {
                 'rank' => tds[0].text,
                 'name' => tds[1].text,
-                'icon' => tds[1].xpath('./img/@src'),
-                'link' => tds[2].xpath('./a/@href'),
+                'icon' => tds[1].xpath('./img/@src').first.value,
+                'link' => tds[2].xpath('./a/@href').first.value,
                 'pair' => tds[2].text,
-                '24h_volume_usd' => tds[3].xpath('./span/@data-usd'),
-                '24h_volume_btc' => tds[3].xpath('./span/@data-btc'),
-                '24h_volume_native' => tds[3].xpath('./span/@data-native'),
-                'price_usd' => tds[4].xpath('./span/@data-usd'),
-                'price_btc' => tds[4].xpath('./span/@data-btc'),
-                'price_native' => tds[4].xpath('./span/@data-native'),
+                '24h_volume_usd' => tds[3].xpath('./span/@data-usd').first.value,
+                '24h_volume_btc' => tds[3].xpath('./span/@data-btc').first.value,
+                '24h_volume_native' => tds[3].xpath('./span/@data-native').first.value,
+                'price_usd' => tds[4].xpath('./span/@data-usd').first.value,
+                'price_btc' => tds[4].xpath('./span/@data-btc').first.value,
+                'price_native' => tds[4].xpath('./span/@data-native').first.value,
                 'percent_volume' => tds[5].text.gsub('[\s\r\n%]+', '')
             }
           end
