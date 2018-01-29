@@ -92,20 +92,19 @@ module CryptoCoins
     end
   end
   class News
-    def self.search(keywords, secret_key)
-      today = Date.today.strftime('%Y-%m-%d')
-      yesterday = Date.today.prev_day.strftime('%Y-%m-%d')
-      options = {query: {language: 'en',
+    def self.search(secret_key, options = {})
+      request = {query: {language: 'en',
                          sortBy: 'popularity',
                          apiKey: secret_key,
-                         from: yesterday,
-                         to: today,
-                         q: keywords,
+                         from: Date.today.prev_day.strftime('%Y-%m-%d'),
+                         to: Date.today.strftime('%Y-%m-%d'),
+                         q: '+bitcoin',
                          pageSize: '100'}}
-      return HTTParty.get('https://newsapi.org/v2/everything?', options)['articles']
-    end
-    def self.bitcoin(secret_key)
-      return self.search('+bitcoin', secret_key)
+      options.each do |key, value|
+        request[:query][key] = value if request[:query][key]
+      end
+      request[:query].merge!(sources: options[:sources]) if options[:sources]
+      return HTTParty.get('https://newsapi.org/v2/everything?', request)['articles']
     end
   end
 end
